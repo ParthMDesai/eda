@@ -1,0 +1,17 @@
+rm(list=ls())
+d1<-read_csv("diabetes.csv")
+str(d1)
+d1$Pregnancies<-as.factor(d1$Pregnancies)
+d1$Outcome<-as.factor(d1$Outcome)
+str(d1)
+xtabs(~Pregnancies+Outcome,data=d1) 
+set.seed(5)
+d2<-sample(2,nrow(d1),replace=T,prob = c(0.75,0.25))
+train<-d1[d2==1,]
+test<-d1[d2==2,]
+model<-glm(Outcome~BloodPressure+Insulin,data=train,family = 'binomial')
+summary(model)
+pred<-predict(model,test,type = 'response') 
+cls<-ifelse(pred>0.5,'Diabetes','NotDiabetes')
+head(cls)
+head(test)

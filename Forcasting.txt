@@ -1,0 +1,47 @@
+#install.packages("devtools")
+devtools::install_github("FinYang/tsdl")
+library(tsdl)
+#install.packages("ggplot2")
+library(ggplot2)
+#install.packages("ggfortify")
+library(ggfortify)
+#install.packages("tseries")
+library(tseries)
+#install.packages("forecast")
+library(forecast)
+tsdl
+sales <- subset(tsdl, 'sales', 12)
+sales <-sales[[24]]
+sales 
+head(sales)
+class(sales)
+summary(sales)
+start(sales) 
+end(sales)
+frequency(sales)
+cycle(sales)
+sum(is.na(sales))
+# Plot the raw data using the base plot function
+plot(sales,xlab="Year", ylab = "numbers",main="Monthly unit sales, Winnebago
+Industries, Nov. 1966 – Feb. 1972")
+decomposesales <- decompose(sales,"multiplicative")
+autoplot(decomposesales)
+plot(sales)+abline(reg=lm(sales~time(sales)))
+logsales = log(sales) 
+#Make it stationary
+plot(logsales)
+plot(logsales)+abline(reg=lm(logsales~time(logsales))) 
+plot(diff(logsales))
+model = auto.arima(logsales)
+summary(model)
+pred <- predict(model, n.ahead = 5*12)
+pred
+pred1<-round(2.718^pred$pred,0) 
+pred1
+ts.plot(sales,pred1,log="y",lty=c(1,3))
+acf(logsales)
+acf(diff(logsales))
+pacf(diff(logsales))
+Model1 <- arima(logsales, c(0, 1, 1),seasonal = list(order = c(0, 1, 1), period = 12))
+pred <- predict(Model1, n.ahead = 5*12)
+pred

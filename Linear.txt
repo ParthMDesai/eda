@@ -1,0 +1,29 @@
+df<-cars
+df 
+summary(df)
+qqnorm(df$speed) 
+qqline(df$speed) 
+hist(df$speed,prob = TRUE) 
+lines(density(df$speed))
+#simple linear regression model one independent variable lm() 
+model1<-lm(speed~dist,data= df)
+names(model1) 
+model1$coefficients 
+plot(model1$residuals)
+summary(model1) 
+qqnorm(model1$residuals)
+qqline(model1$residuals,col='red',lwd=3) 
+hist(model1$residuals,prob = TRUE) 
+lines(density(model1$residuals),col='red')
+#Hand Calculation #Residual SE
+k=length(model1$coefficients)-1 
+SSE=sum(model1$residuals**2) 
+n=length(model1$residuals) 
+(RSE=sqrt(SSE/(n-(k+1))))
+#calculate standard error
+(s<-summary(model1)$sigma) 
+n<-nrow(df)
+n
+(b1<-s*sqrt(1/sum((df$dist-mean(df$dist))**2))) 
+(b=s*sqrt((1/n)+((mean(df$dist)*2)/sum((df$dist - mean(df$dist))*2)))) 
+summary(model1)
