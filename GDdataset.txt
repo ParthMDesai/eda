@@ -1,0 +1,27 @@
+rm(list=ls())
+install.packages("gradDescent")
+install.packages("caret")
+library(dplyr)
+library(caret)
+library(gradDescent)
+
+x = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+y = c(10, 12.8978, 17.7586, 23.3292, 28.3129, 32.135, 35, 40, 45, 48)
+
+dataset = data.frame(x, y)
+set.seed(34)
+trainIndex<-createDataPartition(dataset$y,p=0.5,
+                                list = FALSE,
+                                times=1)
+train_data<-dataset[trainIndex,]
+test_data<-dataset[-trainIndex,]
+test_data<-subset(test_data,select=c(x))
+model<-GD(dataset,alpha=0.01,maxIter = 5000,seed=NULL)
+model
+yp<-prediction(model,test_data)
+yp
+dataset
+
+#linear regression
+model1<-lm(y~x,dataset)
+model1
